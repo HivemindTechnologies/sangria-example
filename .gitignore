@@ -1,0 +1,41 @@
+# Build Server Protocol for IntelliJ
+.bsp/*
+**/.bsp/*
+
+# IntelliJ
+/out/
+.idea
+
+# VS Code Scala Metals
+.vscode
+.metals/
+.bloop/
+.ammonite/
+metals.sbt
+
+# sbt specific
+target/
+bin/
+build/
+*.class
+
+# local development overrides
+*-local.conf
+local.sbt
+.cache
+.cache-main
+
+# various
+*.log
+.DS_Store
+.classpath
+.history
+.project
+.scala_dependencies
+.settings
+.worksheet
+*.tasty
+*.iml
+*.ipr
+*.iws
+meta.json
