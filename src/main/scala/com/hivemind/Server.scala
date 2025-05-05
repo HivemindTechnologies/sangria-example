@@ -16,6 +16,7 @@ import sangria.parser.{QueryParser, SyntaxError}
 import sangria.ast.Document
 import com.hivemind.schema.SchemaDefinition
 import com.hivemind.models.Book
+import com.hivemind.service.BookService
 import io.circe.*
 import io.circe.parser.*
 import io.circe.syntax.*
@@ -36,6 +37,7 @@ object Server extends IOApp {
   implicit val loggerFactory: LoggerFactory[IO] = Slf4jFactory.create[IO]
   implicit val logger: Logger[IO]               = loggerFactory.getLogger
   implicit val bookEncoder: Encoder[Book]       = deriveEncoder[Book]
+  val bookService                               = new BookService()
 
   val corsHeaders = Headers(
     Header.Raw(CIString("Access-Control-Allow-Origin"), "*"),
@@ -59,7 +61,7 @@ object Server extends IOApp {
                             Executor.execute(
                               SchemaDefinition.schema,
                               queryAst,
-                              (),
+                              bookService,
                               variables = variables,
                               operationName = operationName,
                             ),

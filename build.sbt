@@ -21,6 +21,7 @@ val sangriaVersion      = "4.1.0"
 val sangriaCirceVersion = "1.3.2"
 val circeVersion        = "0.14.9"
 val http4sVersion       = "0.23.27"
+val zioVersion          = "2.0.22"
 
 libraryDependencies ++= Seq(
   "org.sangria-graphql" %% "sangria"             % sangriaVersion,
@@ -37,6 +38,7 @@ libraryDependencies ++= Seq(
   "org.http4s"          %% "http4s-circe"        % http4sVersion,
   "com.comcast"         %% "ip4s-core"           % "3.7.0",
   "org.http4s"          %% "http4s-server"       % http4sVersion,
+  "dev.zio"             %% "zio"                 % zioVersion,
 )
 
 scalacOptions ++= Seq(
