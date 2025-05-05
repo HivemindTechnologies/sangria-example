@@ -1,7 +1,7 @@
-# Http4s Sample Application
+# Sangria Sample Application
 
-This is a Scala project for the blog article about Scala API libraries.
-It provides a simple example on how to use https://http4s.org/ library.
+This is a Scala project for the blog article about Scala HTTP API libraries.
+It provides a simple example on how to use https://sangria-graphql.github.io/ library.
 
 ## Provided SBT commands
 
@@ -50,4 +50,3 @@ The `sbt check` command will execute the following steps:
 ```bash
 sbt check
 ```
-
