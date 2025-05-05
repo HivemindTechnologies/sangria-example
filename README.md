@@ -50,3 +50,17 @@ The `sbt check` command will execute the following steps:
 ```bash
 sbt check
 ```
+
+## Sample Screenshots
+
+### GraphiQL Playground
+
+![image](https://github.com/user-attachments/assets/8efaacd6-cfcb-4324-955e-73dcb2f45192)
+
+### GraphiQL API Documentation
+
+![image](https://github.com/user-attachments/assets/88924c44-9865-4278-8b5f-adaca3cfc61f)
+
+![image](https://github.com/user-attachments/assets/698aad83-7d5e-475a-8ba9-ad240d008e92)
+
+
