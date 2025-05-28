@@ -7,23 +7,22 @@ import com.hivemind.service.BookService
 import zio.*
 import scala.concurrent.Future
 import com.hivemind.service.ServiceUtils.zioToFuture
+import scala.concurrent.duration.Duration
+import scala.concurrent.Await
 
 object SchemaDefinition {
-  implicit val BookType: ObjectType[Unit, Book] = deriveObjectType[Unit, Book](
-    ObjectTypeDescription("A book in the library"),
-  )
+  case class Query() {
+    @GraphQLField
+    def books(sangria: Context[MyCtx, Unit]): List[Book] = {
+      val service = sangria.ctx.service
+      val zioTask = service.getBooks
+      Await.result(zioToFuture(zioTask), Duration.Inf)
+    }
+  }
 
-  val QueryType = ObjectType(
-    "Query",
-    fields[BookService, Unit](
-      Field(
-        "books",
-        ListType(BookType),
-        description = Some("Returns a list of all books."),
-        resolve = ctx => zioToFuture(ctx.ctx.getBooks),
-      ),
-    ),
-  )
+  case class MyCtx(query: Query, service: BookService)
+
+  val QueryType = deriveContextObjectType[MyCtx, Query, Unit](_.query)
 
   val schema = Schema(QueryType)
 }

@@ -11,7 +11,7 @@ import io.circe.Json
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class GraphQLQueryTest extends AsyncFlatSpec with Matchers {
-  val bookService = new BookService()
+  val bookService = BookService()
 
   "GraphQL books query" should "return all books" in {
     val query =
@@ -33,7 +33,7 @@ class GraphQLQueryTest extends AsyncFlatSpec with Matchers {
       .execute(
         SchemaDefinition.schema,
         queryAst,
-        bookService,
+        SchemaDefinition.MyCtx(query = SchemaDefinition.Query(), service = bookService),
       )
       .map { result =>
         val books = result.hcursor.downField("data").downField("books").as[List[Json]].getOrElse(List.empty)
@@ -67,7 +67,7 @@ class GraphQLQueryTest extends AsyncFlatSpec with Matchers {
       .execute(
         SchemaDefinition.schema,
         queryAst,
-        bookService,
+        SchemaDefinition.MyCtx(query = SchemaDefinition.Query(), service = bookService),
       )
       .map { result =>
         val books = result.hcursor.downField("data").downField("books").as[List[Json]].getOrElse(List.empty)

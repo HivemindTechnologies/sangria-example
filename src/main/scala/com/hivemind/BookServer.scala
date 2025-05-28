@@ -22,11 +22,11 @@ import scala.io.Source.*
 
 object BookServer extends ZIOAppDefault {
   implicit val bookEncoder: Encoder[Book] = deriveEncoder[Book]
-  val bookService                         = new BookService()
 
-  val graphQLRoutes = Routes[Any, Response](
+  val graphQLRoutes = Routes[BookService, Response](
     Method.POST / "graphql"    -> handler { (req: Request) =>
       for {
+        bookService  <- ZIO.service[BookService]
         body         <- req.body.asString
         json         <- ZIO.fromEither(io.circe.parser.parse(body))
         query         = json.hcursor.downField("query").as[String].getOrElse("")
@@ -37,12 +37,12 @@ object BookServer extends ZIOAppDefault {
                           Executor.execute(
                             SchemaDefinition.schema,
                             queryAst,
-                            bookService,
+                            SchemaDefinition.MyCtx(query = SchemaDefinition.Query(), service = bookService),
                             variables = variables,
                             operationName = operationName,
                           )
                         }
-        response     <- ZIO.succeed(Response.json(queryResult.toString))
+        response     <- ZIO.succeed(Response.json(queryResult.noSpaces))
       } yield response
     }.mapError(_ => Response.internalServerError),
     Method.OPTIONS / "graphql" -> handler { (_: Request) =>
@@ -69,11 +69,12 @@ object BookServer extends ZIOAppDefault {
       _ <- ZIO.logInfo(s"GraphQL endpoint will be available at http://$host:$port/graphql")
       _ <- ZIO.logInfo(s"GraphiQL interface will be available at http://$host:$port/graphiql")
       _ <- Server
-             .serve[Any](graphQLRoutes)
+             .serve[BookService](graphQLRoutes)
              .provide(
                Server.defaultWithPort(port),
                Runtime.removeDefaultLoggers,
                Runtime.addLogger(ZLogger.default),
+               BookService.layer,
              )
     } yield ()
   }

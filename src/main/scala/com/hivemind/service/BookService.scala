@@ -3,7 +3,7 @@ package com.hivemind.service
 import zio.*
 import com.hivemind.models.Book
 
-class BookService {
+case class BookService() {
   def getBooks: Task[List[Book]] = ZIO.succeed(
     List(
       Book("1", "The Great Gatsby", "F. Scott Fitzgerald", 1925, "Classic"),
